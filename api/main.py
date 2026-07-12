@@ -44,7 +44,7 @@ async def run_debate_stream(topic: str):
         yield f"data: {json.dumps({'error': str(e)})}\n\n"
 
 
-@app.get("/debate")
+@app.get("/api/debate")
 async def debate(topic: str = Query(..., description="The debate topic")):
     return StreamingResponse(
         run_debate_stream(topic),
@@ -57,6 +57,6 @@ async def debate(topic: str = Query(..., description="The debate topic")):
     )
 
 
-@app.get("/health")
+@app.get("/api/health")
 async def health():
     return {"status": "ok"}
