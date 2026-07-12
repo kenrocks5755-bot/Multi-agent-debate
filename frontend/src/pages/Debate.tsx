@@ -156,13 +156,13 @@ export default function Debate() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}>
 
-      <div className="absolute top-5 right-6 z-50"><ThemeToggle isDark={isDark} onToggle={toggleTheme} /></div>
+      <div className="absolute top-4 right-4 sm:top-5 sm:right-6 z-50"><ThemeToggle isDark={isDark} onToggle={toggleTheme} /></div>
 
       <TopicHeader topic={topic} currentRound={currentRound} totalRounds={3} isDark={isDark} />
 
       <AnimatePresence>
         {roundTransition && (
-          <motion.div className="absolute top-24 left-1/2 -translate-x-1/2 z-40"
+          <motion.div className="absolute top-20 md:top-24 left-1/2 -translate-x-1/2 z-40"
             initial={{ opacity: 0, y: -8, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.95 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}>
             <div className="rounded-2xl px-5 py-2.5 border shadow-sm transition-colors duration-500"
@@ -176,8 +176,8 @@ export default function Debate() {
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex">
-        <motion.div className="w-[240px] shrink-0 flex flex-col items-center gap-4 pt-8 px-4 transition-colors duration-500"
+      <div className="flex-1 flex flex-col md:flex-row">
+        <motion.div className="hidden md:flex w-[240px] shrink-0 flex-col items-center gap-4 pt-8 px-4 transition-colors duration-500"
           style={{ borderRight: `1px solid ${isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)"}` }}
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -195,7 +195,7 @@ export default function Debate() {
           </motion.div>
         </motion.div>
 
-        <div className="flex-1 flex flex-col items-center justify-center px-10 pb-16">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-10 pb-16">
           {phase === "intro" && !currentAgent && (
             <motion.div key="loading" className="flex flex-col items-center gap-4"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}>

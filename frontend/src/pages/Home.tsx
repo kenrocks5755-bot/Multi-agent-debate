@@ -51,7 +51,7 @@ export default function Home() {
         }} />
       </div>
 
-      <div className="w-full flex items-center justify-between px-8 py-5 relative z-10" style={{ paddingLeft: 32, paddingRight: 32 }}>
+      <div className="w-full flex items-center justify-between px-4 sm:px-8 py-5 relative z-10">
         <motion.div className="flex items-center gap-2"
           initial={{ opacity: 0, x: -16 }}
           animate={{ opacity: 1, x: 0 }}
@@ -79,7 +79,7 @@ export default function Home() {
         </motion.div>
       </div>
 
-      <div className="flex-1 flex flex-col items-center justify-center px-6 relative z-10" style={{ marginTop: -60 }}>
+      <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 relative z-10" style={{ marginTop: -60 }}>
         <motion.div className="flex items-center gap-2 mb-6"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -145,7 +145,7 @@ export default function Home() {
           <br />critique, synthesize, and judge the strongest argument.
         </motion.p>
 
-        <motion.div className="flex items-center gap-3 mb-10"
+        <motion.div className="flex items-center justify-center gap-3 mb-10 flex-wrap"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.95 }}>
@@ -171,7 +171,7 @@ export default function Home() {
         </motion.div>
       </div>
 
-      <motion.div className="w-full flex items-center justify-center py-5 relative z-10 gap-3"
+      <motion.div className="w-full flex items-center justify-center py-5 relative z-10 gap-3 flex-wrap px-4"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 1.6 }}>

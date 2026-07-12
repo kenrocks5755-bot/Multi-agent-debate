@@ -53,7 +53,7 @@ function ChatBubble({ entry, isDark, index }: { entry: TranscriptEntry; isDark: 
   const isBulleted = lines.some(l => l.trim().startsWith("-") || l.trim().startsWith("*"));
 
   return (
-    <motion.div className="flex gap-4"
+    <motion.div className="flex gap-3 sm:gap-4"
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.04, ease: "easeInOut" }}>
@@ -70,7 +70,7 @@ function ChatBubble({ entry, isDark, index }: { entry: TranscriptEntry; isDark: 
             Round {entry.round}
           </span>
         </div>
-        <motion.div className="p-5 transition-all duration-250"
+        <motion.div className="p-4 sm:p-5 transition-all duration-250"
           style={{ background: bgColor, border: `1px solid ${borderColor}` }}
           whileHover={{ y: -1, boxShadow: isDark ? "0 4px 20px rgba(0,0,0,0.2)" : "0 4px 20px rgba(0,0,0,0.04)" }}>
           {isBulleted ? (
@@ -135,7 +135,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, delay: 0.2, ease: "easeInOut" }}>
-      <div className="flex items-center justify-between px-8 py-6 border-b" style={{ borderColor }}>
+      <div className="flex items-center justify-between px-4 sm:px-6 py-4 sm:py-6 border-b" style={{ borderColor }}>
         <div className="flex items-center gap-3">
           <h2 className="text-sm font-semibold tracking-tight" style={{ color: textColor, fontFamily: "var(--font-heading)" }}>
             Debate Transcript
@@ -153,7 +153,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
         </motion.button>
       </div>
 
-      <div className="p-8 space-y-4 overflow-y-auto custom-scrollbar">
+      <div className="p-4 sm:p-6 space-y-3 sm:space-y-4 overflow-y-auto custom-scrollbar">
         {grouped.map(([round, entries], ri) => {
           const rNum = Number(round);
           const isOpen = expandedRounds[rNum] ?? false;
@@ -165,7 +165,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, delay: ri * 0.05 }}>
               <motion.button onClick={() => toggleRound(rNum)}
-                className="w-full flex items-center justify-between px-8 py-5 cursor-pointer transition-all duration-250"
+                className="w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 cursor-pointer transition-all duration-250"
                 style={{ background: isDark ? "rgba(255,255,255,0.01)" : "rgba(255,255,255,0.4)" }}
                 whileHover={{ background: isDark ? "rgba(255,255,255,0.03)" : "rgba(255,255,255,0.6)" }}>
                 <div className="flex items-center gap-3">
@@ -186,7 +186,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
               </motion.button>
               <AnimatePresence initial={false}>
                 {isOpen && (
-                  <motion.div className="px-8 pb-6"
+                  <motion.div className="px-4 sm:px-6 pb-4 sm:pb-6"
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
@@ -212,7 +212,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: grouped.length * 0.05 }}>
             <motion.button onClick={() => toggleRound(4)}
-                className="w-full flex items-center justify-between px-8 py-5 cursor-pointer transition-all duration-250"
+                className="w-full flex items-center justify-between px-4 sm:px-6 py-3 sm:py-5 cursor-pointer transition-all duration-250"
                 style={{ background: "rgba(246, 196, 83, 0.04)" }}
               whileHover={{ background: "rgba(246, 196, 83, 0.08)" }}>
               <div className="flex items-center gap-3">
@@ -232,7 +232,7 @@ export default function DebateTimeline({ transcript, isDark }: DebateTimelinePro
             </motion.button>
             <AnimatePresence initial={false}>
               {expandedRounds[4] && (
-                <motion.div className="px-8 pb-6"
+                <motion.div className="px-4 sm:px-6 pb-4 sm:pb-6"
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}

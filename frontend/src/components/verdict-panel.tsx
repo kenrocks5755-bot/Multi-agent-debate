@@ -47,7 +47,7 @@ export default function VerdictPanel({ show, winner, scores, summary, isDark }: 
             style={{ backgroundColor: isDark ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.6)" }} />
 
           <motion.div
-            className="relative max-w-lg w-full mx-6 rounded-3xl p-10 border shadow-2xl transition-colors duration-500"
+            className="relative max-w-lg w-full mx-4 sm:mx-6 rounded-3xl p-6 sm:p-10 border shadow-2xl transition-colors duration-500"
             style={{
               backgroundColor: isDark ? "rgba(20,20,22,0.95)" : "rgba(255,255,255,0.8)",
               borderColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)",

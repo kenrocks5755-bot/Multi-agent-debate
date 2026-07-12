@@ -37,15 +37,15 @@ export default function Summary() {
 
       <ResultHeader topic={topic} isDark={isDark} onToggleTheme={toggleTheme} />
 
-      <div className="flex-1 w-full mx-auto" style={{ maxWidth: 1600, padding: "0 40px" }}>
-        <motion.div className="flex gap-8 pb-10"
+      <div className="flex-1 w-full mx-auto" style={{ maxWidth: 1600, padding: "0 16px" }}>
+        <motion.div className="flex flex-col md:flex-row gap-6 md:gap-8 pb-10"
           style={{ minHeight: "calc(100vh - 100px)" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.4, delay: 0.1 }}>
 
           <div className="flex flex-col gap-5 shrink-0 custom-scrollbar overflow-y-auto"
-            style={{ width: "22%", maxHeight: "calc(100vh - 120px)", paddingRight: 8 }}>
+            style={{ width: "100%", maxWidth: 320, maxHeight: "calc(100vh - 120px)" }}>
             <h2 className="mono text-[10px] uppercase tracking-[0.15em] px-1 pt-1" style={{ color: mutedColor }}>
               AI Agents
             </h2>
@@ -73,7 +73,7 @@ export default function Summary() {
           </div>
 
           <div className="flex flex-col gap-5 shrink-0 custom-scrollbar overflow-y-auto"
-            style={{ width: "28%", maxHeight: "calc(100vh - 120px)", paddingLeft: 8 }}>
+            style={{ width: "100%", maxWidth: 380, maxHeight: "calc(100vh - 120px)" }}>
             <DebateAnalytics scores={scores} winner={winner} summary={summary} isDark={isDark} />
           </div>
         </motion.div>

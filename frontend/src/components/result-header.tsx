@@ -22,7 +22,7 @@ export default function ResultHeader({ topic, isDark, onToggleTheme }: ResultHea
   const mutedColor = isDark ? "rgba(255,255,255,0.75)" : "#6B7280";
 
   return (
-    <div className="flex items-center justify-between px-8 py-5" style={{ paddingLeft: 32, paddingRight: 32 }}>
+    <div className="flex items-center justify-between px-4 sm:px-8 py-5">
       <motion.div className="flex flex-col"
         initial={{ opacity: 0, x: -16 }}
         animate={{ opacity: 1, x: 0 }}
@@ -76,11 +76,11 @@ export default function ResultHeader({ topic, isDark, onToggleTheme }: ResultHea
           initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 1, delay: 0.5 }} />
       </motion.div>
 
-      <motion.div className="flex items-center gap-4"
+      <motion.div className="flex items-center gap-2 sm:gap-4"
         initial={{ opacity: 0, x: 16 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.45, ease: "easeInOut", delay: 0.15 }}>
-        <motion.div className="rounded-2xl px-4 py-2.5 flex items-center gap-3"
+        <motion.div className="hidden sm:flex rounded-2xl px-4 py-2.5 items-center gap-3"
           style={{
             backgroundColor: isDark ? "rgba(18,18,30,0.72)" : "rgba(255,255,255,0.75)",
             border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.5)"}`,

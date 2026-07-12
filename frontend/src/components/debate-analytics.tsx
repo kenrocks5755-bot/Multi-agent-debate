@@ -71,7 +71,7 @@ export default function DebateAnalytics({ scores, winner, summary, isDark }: Deb
 
   return (
     <div className="flex flex-col gap-6">
-      <motion.div className="rounded-3xl p-7"
+      <motion.div className="rounded-3xl p-5 sm:p-6"
         style={{ background: bgColor, border: `1px solid ${borderColor}` }}
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
@@ -131,7 +131,7 @@ export default function DebateAnalytics({ scores, winner, summary, isDark }: Deb
         </div>
       </motion.div>
 
-      <motion.div className="rounded-3xl p-7 text-center relative overflow-hidden"
+      <motion.div className="rounded-3xl p-5 sm:p-6 text-center relative overflow-hidden"
         style={{
           background: isDark ? `${winnerMeta.color}04` : `linear-gradient(135deg, ${winnerMeta.color}03, transparent)`,
           border: `1px solid ${isDark ? `${winnerMeta.color}10` : `${winnerMeta.color}15`}`,

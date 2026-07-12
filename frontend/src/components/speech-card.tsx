@@ -15,7 +15,7 @@ function MessageContent({ text, color, isDark }: { text: string; color: string; 
 
   if (!isBulleted) {
     return (
-      <p className="leading-[1.8]" style={{ fontSize: 16, color: textColor, maxWidth: 520 }}>
+      <p className="leading-[1.8]" style={{ fontSize: "clamp(14px, 4vw, 16px)", color: textColor, maxWidth: 520 }}>
         {text}
       </p>
     );
@@ -31,7 +31,7 @@ function MessageContent({ text, color, isDark }: { text: string; color: string; 
         return (
           <div key={i} className="flex items-start gap-3">
             <div className="w-2 h-2 rounded-full mt-[9px] shrink-0" style={{ backgroundColor: color, opacity: 0.5 }} />
-            <span className="leading-[1.8]" style={{ fontSize: 16, color: textColor }}>{content}</span>
+            <span className="leading-[1.8]" style={{ fontSize: "clamp(14px, 4vw, 16px)", color: textColor }}>{content}</span>
           </div>
         );
       })}
@@ -41,15 +41,15 @@ function MessageContent({ text, color, isDark }: { text: string; color: string; 
 
 export default function SpeechCard({ speaker, message, color, round, isDark }: SpeechCardProps) {
   return (
-    <div className="w-full" style={{ maxWidth: 580 }}>
+    <div className="w-full px-4 sm:px-0" style={{ maxWidth: 580 }}>
       <div
-        className="rounded-2xl p-8 transition-colors duration-500"
+        className="rounded-2xl p-5 sm:p-8 transition-colors duration-500"
         style={{
           backgroundColor: isDark ? "rgba(18,18,30,0.72)" : "rgba(255,255,255,0.5)",
           border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)"}`,
         }}
       >
-        <div className="flex items-center gap-3 mb-6">
+        <div className="flex items-center gap-3 mb-6 flex-wrap">
           <motion.div
             className="w-2.5 h-2.5 rounded-full"
             style={{ backgroundColor: color }}

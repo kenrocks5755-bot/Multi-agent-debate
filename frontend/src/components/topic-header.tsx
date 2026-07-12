@@ -13,17 +13,17 @@ export default function TopicHeader({ topic, currentRound, totalRounds, isDark }
   const mutedColor = isDark ? "rgba(255,255,255,0.45)" : "#6B7280";
 
   return (
-    <motion.div className="flex items-center justify-between px-8 pt-6 pb-4 transition-colors duration-500"
+    <motion.div className="flex items-center justify-between px-4 sm:px-8 pt-4 sm:pt-6 pb-4 transition-colors duration-500"
       style={{ borderBottom: `1px solid ${isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)"}` }}
       initial={{ opacity: 0, y: -12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}>
-      <motion.div className="flex items-center gap-3"
+      <motion.div className="flex items-center gap-3 min-w-0 flex-1"
         initial={{ opacity: 0, x: -12 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}>
-        <Sparkles size={16} style={{ color: "#7C5CFF" }} />
-        <h1 className="text-lg font-semibold tracking-tight transition-colors duration-500"
+        <Sparkles size={16} style={{ color: "#7C5CFF" }} className="shrink-0" />
+        <h1 className="text-base sm:text-lg font-semibold tracking-tight transition-colors duration-500 truncate"
           style={{ color: textColor, fontFamily: "var(--font-heading)" }}>
           {topic}
         </h1>
