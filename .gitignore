@@ -9,3 +9,5 @@ dist-ssr
 .idea
 *.local
 .DS_Store
+
+.vercel
