@@ -31,7 +31,7 @@ export default function AnimatedBackground() {
   }, [handleMouse]);
 
   const dots = useMemo(() =>
-    Array.from({ length: 40 }).map((_, i) => ({
+    Array.from({ length: 40 }).map((_, _i) => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
       size: 1 + Math.random() * 2,

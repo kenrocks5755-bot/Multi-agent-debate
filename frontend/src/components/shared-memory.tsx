@@ -40,7 +40,7 @@ export default function SharedMemory({ isPulsing, compact }: SharedMemoryProps) 
 
   const baseSize = compact ? 56 : 120;
   const count = compact ? 6 : 16;
-  const particles = Array.from({ length: count }).map((_, i) => ({
+  const particles = Array.from({ length: count }).map((_, _i) => ({
     radius: (compact ? 24 : 50) + Math.random() * (compact ? 16 : 40),
     color: ringColors[Math.floor(Math.random() * 4)],
     delay: Math.random() * 5,

@@ -47,7 +47,7 @@ export default function AgentNode({ name, icon: Icon, color, glowColor, isActive
         }}
         animate={{ scale: isActive ? 1.05 : 1 }}
         transition={{ duration: 0.4 }}>
-        <Icon size={16} style={{ color }} />
+        <Icon width={16} height={16} style={{ color }} />
       </motion.div>
 
       <div className="flex-1 min-w-0">

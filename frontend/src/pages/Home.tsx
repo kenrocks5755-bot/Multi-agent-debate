@@ -6,9 +6,6 @@ import LiveStatus from "../components/live-status";
 import ThemeToggle from "../components/theme-toggle";
 import { Sparkles, Shield, Network, FileText, ExternalLink } from "lucide-react";
 
-let wordIndex = 0;
-function nextWordDelay() { wordIndex++; return 0.15 + wordIndex * 0.1; }
-
 const heroWords = [
   { text: "Three", delay: 0.15 },
   { text: "AI", delay: 0.25, accent: true },
@@ -36,8 +33,7 @@ export default function Home() {
 
   const bg = isDark ? "#0D0D14" : "#FAFAFC";
   const textColor = isDark ? "rgba(255,255,255,0.8)" : "#1E1E2F";
-  const mutedColor = isDark ? "rgba(255,255,255,0.2)" : "#6B7280";
-  const borderColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+
   const textShadow = isDark ? "0 1px 4px rgba(0,0,0,0.6)" : "0 1px 3px rgba(0,0,0,0.1)";
   const heroGlow = isDark ? "0 0 20px rgba(124,92,255,0.15)" : "0 0 15px rgba(124,92,255,0.05)";
 

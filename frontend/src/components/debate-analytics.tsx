@@ -55,7 +55,7 @@ interface DebateAnalyticsProps {
 
 export default function DebateAnalytics({ scores, winner, summary, isDark }: DebateAnalyticsProps) {
   const navigate = useNavigate();
-  const maxScore = Math.max(...Object.values(scores), 1);
+
   const textColor = isDark ? "#FFFFFF" : "#1E1E2F";
   const mutedColor = isDark ? "rgba(255,255,255,0.75)" : "#6B7280";
   const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)";
@@ -68,7 +68,6 @@ export default function DebateAnalytics({ scores, winner, summary, isDark }: Deb
   }, [scores]);
 
   const winnerMeta = agentMeta[winner] || { icon: Trophy, name: winner, color: "#F6C453" };
-  const WinnerIcon = winnerMeta.icon;
 
   return (
     <div className="flex flex-col gap-6">
