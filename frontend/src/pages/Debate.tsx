@@ -21,6 +21,18 @@ const agentMeta: Record<string, { name: string; icon: typeof Sparkles; color: st
 
 const agentOrder = ["visionary", "critic", "generalizer"] as const;
 
+const debateSteps = [
+  { round: 1, agent: "visionary" as Agent },
+  { round: 1, agent: "critic" as Agent },
+  { round: 1, agent: "generalizer" as Agent },
+  { round: 2, agent: "visionary" as Agent },
+  { round: 2, agent: "critic" as Agent },
+  { round: 2, agent: "generalizer" as Agent },
+  { round: 3, agent: "visionary" as Agent },
+  { round: 3, agent: "critic" as Agent },
+  { round: 3, agent: "generalizer" as Agent },
+];
+
 export default function Debate() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -40,10 +52,10 @@ export default function Debate() {
   const [fullTranscript, setFullTranscript] = useState<{ speaker: string; round: number; message: string }[]>([]);
   const [roundTransition, setRoundTransition] = useState(false);
 
+  const [isLoading, setIsLoading] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const pendingRef = useRef<{ node: string; speaker: string; round: number; message: string }[]>([]);
-  const processingRef = useRef(false);
-  const roundRef = useRef(1);
+  const historyRef = useRef<{ speaker: string; round: number; message: string }[]>([]);
+  const stepRef = useRef(0);
 
   const startTypewriter = useCallback((text: string) => {
     setCurrentMessage("");
@@ -62,25 +74,50 @@ export default function Debate() {
     }, 8);
   }, []);
 
-  const advanceQueue = useCallback(() => {
-    if (processingRef.current || pendingRef.current.length === 0) return;
-    processingRef.current = true;
-    const entry = pendingRef.current.shift()!;
-    if (entry.round > roundRef.current) {
-      roundRef.current = entry.round;
-      setRoundTransition(true);
-      setTimeout(() => setRoundTransition(false), 1200);
+  const fetchNext = useCallback(async () => {
+    const stepIdx = stepRef.current;
+    stepRef.current += 1;
+    const apiUrl = import.meta.env.VITE_API_URL || "";
+
+    if (stepIdx >= debateSteps.length) {
+      setIsLoading(true);
+      try {
+        const res = await fetch(`${apiUrl}/verdict?topic=${encodeURIComponent(topic)}&history=${encodeURIComponent(JSON.stringify(historyRef.current))}`, { signal: AbortSignal.timeout(20000) });
+        if (!res.ok) { setConnectionError(true); setIsLoading(false); return; }
+        const data = await res.json();
+        setVerdict({ winner: data.winner, scores: data.scores, summary: data.summary });
+        setFullTranscript(prev => [...prev, { speaker: "moderator", round: 3, message: data.summary }]);
+        setTimeout(() => setShowVerdict(true), 1000);
+        setPhase("verdict");
+      } catch { setConnectionError(true); }
+      setIsLoading(false);
+      return;
     }
-    setCurrentRound(entry.round);
-    setFullTranscript(prev => [...prev, { speaker: entry.speaker, round: entry.round, message: entry.message }]);
-    setCurrentSpeaker(entry.node);
-    startTypewriter(entry.message);
-  }, [startTypewriter]);
+
+    const step = debateSteps[stepIdx];
+    setIsLoading(true);
+    try {
+      const res = await fetch(`${apiUrl}/step?topic=${encodeURIComponent(topic)}&agent=${step.agent}&round=${step.round}&history=${encodeURIComponent(JSON.stringify(historyRef.current))}`, { signal: AbortSignal.timeout(20000) });
+      if (!res.ok) { setConnectionError(true); setIsLoading(false); return; }
+      const data = await res.json();
+      const entry = { speaker: data.agent, round: data.round, message: data.message };
+      historyRef.current = [...historyRef.current, entry];
+      setFullTranscript(prev => [...prev, entry]);
+      setCurrentSpeaker(data.agent);
+      setCurrentRound(data.round);
+      if (step.round === 2 || step.round === 3) setRoundTransition(true);
+      startTypewriter(data.message);
+      setPhase("debating");
+    } catch { setConnectionError(true); }
+    setIsLoading(false);
+  }, [topic, startTypewriter]);
 
   const handleContinue = useCallback(() => {
+    if (isLoading) return;
     setMemoryPulse(true);
-    setTimeout(() => { setMemoryPulse(false); processingRef.current = false; advanceQueue(); }, 350);
-  }, [advanceQueue]);
+    setTimeout(() => { setMemoryPulse(false); }, 350);
+    fetchNext();
+  }, [isLoading, fetchNext]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -92,34 +129,12 @@ export default function Debate() {
 
   useEffect(() => {
     setPhase("intro");
-    const apiUrl = import.meta.env.VITE_API_URL || "";
-    const eventSource = new EventSource(`${apiUrl}/debate?topic=${encodeURIComponent(topic)}`);
-    eventSource.onopen = () => setConnectionError(false);
-    eventSource.onmessage = (event) => {
-      if (event.data === "[DONE]") { eventSource.close(); return; }
-      try {
-        const data = JSON.parse(event.data);
-        if (data.error) { setConnectionError(true); return; }
-        if (data.type === "verdict") {
-          setVerdict({ winner: data.winner, scores: data.scores, summary: data.summary || "" });
-          setTimeout(() => setShowVerdict(true), 1000);
-          setPhase("verdict");
-          return;
-        }
-        if (data.speaker && data.message) {
-          const isAgent = data.speaker === "visionary" || data.speaker === "critic" || data.speaker === "generalizer";
-          if (isAgent) {
-            pendingRef.current.push({ node: data.node, speaker: data.speaker, round: data.round, message: data.message });
-            advanceQueue();
-          } else {
-            setFullTranscript(prev => [...prev, { speaker: data.speaker, round: data.round, message: data.message }]);
-          }
-        }
-      } catch {}
-    };
-    eventSource.onerror = () => { setConnectionError(true); };
-    return () => { eventSource.close(); if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [topic, advanceQueue]);
+    stepRef.current = 0;
+    historyRef.current = [];
+    setRoundTransition(false);
+    const timer = setTimeout(() => fetchNext(), 500);
+    return () => { clearTimeout(timer); if (intervalRef.current) clearInterval(intervalRef.current); };
+  }, [topic, fetchNext]);
 
   useEffect(() => {
     if (showVerdict && verdict) {
@@ -132,7 +147,6 @@ export default function Debate() {
 
   const currentAgent = (currentSpeaker === "visionary" || currentSpeaker === "critic" || currentSpeaker === "generalizer")
     ? currentSpeaker as Agent : null;
-  const pendingCount = pendingRef.current.length;
   const bg = isDark ? "#0D0D14" : "#FAFAFC";
 
   return (
@@ -213,13 +227,7 @@ export default function Debate() {
                   whileHover={{ y: -1, backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
                   whileTap={{ scale: 0.98 }}>
                   <ArrowRight size={14} />
-                  <span>Continue</span>
-                  {pendingCount > 0 && (
-                    <span className="mono text-[10px] uppercase ml-1 transition-colors duration-300"
-                      style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)" }}>
-                      {pendingCount} left
-                    </span>
-                  )}
+                  <span>{isLoading ? "Loading..." : "Continue"}</span>
                 </motion.button>
               )}
             </div>
