@@ -92,7 +92,7 @@ export default function Debate() {
 
   useEffect(() => {
     setPhase("intro");
-    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:8000";
+    const apiUrl = import.meta.env.VITE_API_URL || "";
     const eventSource = new EventSource(`${apiUrl}/debate?topic=${encodeURIComponent(topic)}`);
     eventSource.onopen = () => setConnectionError(false);
     eventSource.onmessage = (event) => {
