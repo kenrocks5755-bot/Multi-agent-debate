@@ -8,7 +8,3 @@ class DebateState(TypedDict):
     phase: str
     scores: dict
     winner: str
-    mood: str
-    wildcard: str
-    heckle: str
-    credibility: dict

@@ -21,10 +21,6 @@ async def step(
     agent: str = Query(...),
     round: int = Query(...),
     history: str = Query(default="[]"),
-    mood: str = Query(default=""),
-    wildcard: str = Query(default=""),
-    heckle: str = Query(default=""),
-    credibility: str = Query(default="{}"),
 ):
     if agent not in ("visionary", "critic", "generalizer"):
         raise HTTPException(400, f"Invalid agent: {agent}")
@@ -36,10 +32,6 @@ async def step(
         "phase": "debating",
         "scores": {},
         "winner": "",
-        "mood": mood,
-        "wildcard": wildcard,
-        "heckle": heckle,
-        "credibility": json.loads(credibility),
     }
 
     result = agent_node(state, agent)

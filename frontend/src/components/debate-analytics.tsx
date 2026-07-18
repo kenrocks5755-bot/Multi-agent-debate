@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Shield, Network, Trophy, Share, Download, ArrowRight, Heart } from "lucide-react";
+import { Sparkles, Shield, Network, Trophy, Share, Download, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const agentMeta: Record<string, { icon: typeof Sparkles; name: string; color: string }> = {
@@ -46,58 +46,6 @@ function ScoreBar({ label, value, color, delay, maxValue, isDark }: { label: str
   );
 }
 
-function CredibilityBar({ label, value, color, maxValue, isDark }: { label: string; value: number; color: string; maxValue: number; isDark: boolean }) {
-  const pct = (value / maxValue) * 100;
-  const barColor = value > 60 ? "#57D38C" : value > 30 ? "#F6C453" : "#EF4444";
-  return (
-    <div className="flex items-center gap-3">
-      <span className="mono text-[9px] uppercase tracking-wider w-[90px] shrink-0" style={{ color: isDark ? "rgba(255,255,255,0.70)" : "rgba(107,114,128,0.8)" }}>
-        {label}
-      </span>
-      <div className="flex-1 h-3 rounded-full" style={{ background: `${color}12` }}>
-        <motion.div className="h-full rounded-full flex items-center justify-end pr-1"
-          style={{ background: barColor, width: 0 }}
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.8, ease: "easeInOut" }}>
-          <motion.div className="w-1.5 h-1.5 rounded-full bg-white" />
-        </motion.div>
-      </div>
-      <motion.span className="mono text-[10px] font-bold tabular-nums w-8 text-right"
-        style={{ color: barColor }}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}>
-        {value}%
-      </motion.span>
-    </div>
-  );
-}
-
-function ConfidenceMeter({ value, color, delay }: { value: number; color: string; delay: number }) {
-  const bars = 10;
-  return (
-    <div className="flex items-end gap-[3px] h-6">
-      {Array.from({ length: bars }).map((_, i) => {
-        const threshold = ((i + 1) / bars) * 100;
-        const isLit = threshold <= value;
-        return (
-          <motion.div key={i}
-            className="w-[6px] rounded-t-sm"
-            style={{
-              height: `${((i + 1) / bars) * 100}%`,
-              background: isLit ? color : "rgba(0,0,0,0.06)",
-            }}
-            initial={{ opacity: 0, scaleY: 0 }}
-            animate={{ opacity: 1, scaleY: 1 }}
-            transition={{ duration: 0.3, delay: delay + i * 0.03, ease: "easeInOut" }}
-          />
-        );
-      })}
-    </div>
-  );
-}
-
 interface DebateAnalyticsProps {
   scores: Record<string, number>;
   winner: string;
@@ -139,7 +87,6 @@ export default function DebateAnalytics({ scores, winner, summary, isDark }: Deb
             const metrics = generateMetrics(totalScore);
             const Icon = meta.icon;
             const isWinner = id === winner;
-            const credibilityScore = Math.min(100, Math.round(totalScore * 10));
             return (
               <motion.div key={id}
                 className="rounded-xl p-5 transition-all duration-250"
@@ -165,32 +112,18 @@ export default function DebateAnalytics({ scores, winner, summary, isDark }: Deb
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <ConfidenceMeter value={totalScore * 10} color={meta.color} delay={0.3 + ai * 0.08} />
-                    <motion.span className="text-lg font-bold mono tabular-nums" style={{ color: meta.color }}
-                      initial={{ opacity: 0, scale: 0.5 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ duration: 0.4, delay: 0.4 + ai * 0.08, ease: "easeInOut" }}>
-                      {totalScore.toFixed(1)}
-                    </motion.span>
-                  </div>
+                  <motion.span className="text-lg font-bold mono tabular-nums" style={{ color: meta.color }}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: 0.4 + ai * 0.08, ease: "easeInOut" }}>
+                    {totalScore.toFixed(1)}
+                  </motion.span>
                 </div>
-
-                <div className="space-y-2.5 mb-4">
+                <div className="space-y-2.5">
                   {metrics.map((val, mi) => (
                     <ScoreBar key={mi} label={metricLabels[mi]} value={val} color={meta.color}
                       delay={0.5 + ai * 0.08 + mi * 0.05} maxValue={10} isDark={isDark} />
                   ))}
-                </div>
-
-                <div className="pt-3 border-t" style={{ borderColor }}>
-                  <div className="flex items-center gap-2 mb-2">
-                    <Heart size={10} style={{ color: mutedColor }} />
-                    <span className="mono text-[8px] uppercase tracking-wider" style={{ color: mutedColor }}>
-                      Credibility
-                    </span>
-                  </div>
-                  <CredibilityBar label="Retained" value={credibilityScore} color={meta.color} maxValue={100} isDark={isDark} />
                 </div>
               </motion.div>
             );
