@@ -90,20 +90,9 @@ export default function Debate() {
   const [canContinue, setCanContinue] = useState(false);
 
   const startTypewriter = useCallback((text: string) => {
-    setCurrentMessage("");
-    setIsSpeaking(true);
-    setDoneTyping(false);
-    let idx = 0;
-    if (intervalRef.current) clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      idx++;
-      setCurrentMessage(text.slice(0, idx));
-      if (idx >= text.length) {
-        if (intervalRef.current) { clearInterval(intervalRef.current); intervalRef.current = null; }
-        setIsSpeaking(false);
-        setDoneTyping(true);
-      }
-    }, 8);
+    setCurrentMessage(text);
+    setIsSpeaking(false);
+    setDoneTyping(true);
   }, []);
 
   const applyWildcard = useCallback(() => {
