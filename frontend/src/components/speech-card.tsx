@@ -22,7 +22,7 @@ function MessageContent({ text, color, isDark }: { text: string; color: string; 
   if (!isBulleted) {
     return (
       <p className="leading-[1.9]" style={{ fontSize: "clamp(15px, 4.5vw, 17px)", color: textColor, maxWidth: 520 }}>
-        {text || "..."}
+        {text}
       </p>
     );
   }

@@ -87,6 +87,7 @@ export default function Debate() {
   const [showHeckleInput, setShowHeckleInput] = useState(false);
 
   const [roasts, setRoasts] = useState("");
+  const [canContinue, setCanContinue] = useState(false);
 
   const startTypewriter = useCallback((text: string) => {
     setCurrentMessage("");
@@ -235,12 +236,13 @@ export default function Debate() {
   }, [betPlaced, fetchNext]);
 
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (doneTyping && (e.key === " " || e.key === "Enter") && !showHeckleInput) { e.preventDefault(); handleContinue(); }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [doneTyping, handleContinue, showHeckleInput]);
+    if (doneTyping) {
+      const timer = setTimeout(() => setCanContinue(true), 600);
+      return () => clearTimeout(timer);
+    } else {
+      setCanContinue(false);
+    }
+  }, [doneTyping]);
 
   useEffect(() => {
     if (showVerdict && verdict) {
@@ -450,7 +452,7 @@ export default function Debate() {
               <SpeechCard speaker={agentMeta[currentAgent].name} message={currentMessage}
                 color={agentMeta[currentAgent].color} round={currentRound} isDark={isDark} />
 
-              {showHeckleInput && doneTyping && (
+              {showHeckleInput && canContinue && (
                 <motion.div className="flex items-center gap-2 w-full max-w-[580px]"
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
                   <input
@@ -473,20 +475,20 @@ export default function Debate() {
                 </motion.div>
               )}
 
-              {doneTyping && (
+              {canContinue && (
                 <motion.button onClick={handleContinue}
-                  className="flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-sm font-medium cursor-pointer transition-all duration-300"
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl text-sm font-semibold cursor-pointer transition-all duration-300"
                   style={{
-                    backgroundColor: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
-                    border: `1px solid ${isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)"}`,
-                    color: isDark ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.55)",
+                    background: "linear-gradient(135deg, #7C5CFF, #5B8CFF)",
+                    color: "#fff",
+                    boxShadow: "0 4px 16px rgba(124,92,255,0.25)",
                   }}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }}
-                  whileHover={{ y: -1, backgroundColor: isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)" }}
-                  whileTap={{ scale: 0.98 }}>
-                  <ArrowRight size={14} />
+                  whileHover={{ y: -2, boxShadow: "0 6px 24px rgba(124,92,255,0.35)" }}
+                  whileTap={{ scale: 0.97 }}>
+                  <ArrowRight size={15} />
                   <span>{isLoading ? "Loading..." : "Continue"}</span>
                 </motion.button>
               )}
