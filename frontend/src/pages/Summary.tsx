@@ -7,6 +7,7 @@ import AgentCard from "../components/agent-card";
 import SharedMemory from "../components/shared-memory";
 import DebateTimeline from "../components/debate-timeline";
 import DebateAnalytics from "../components/debate-analytics";
+import { Zap, TrendingUp, TrendingDown } from "lucide-react";
 
 export default function Summary() {
   const [searchParams] = useSearchParams();
@@ -22,6 +23,11 @@ export default function Summary() {
   const transcriptParam = searchParams.get("transcript");
   let transcript: { speaker: string; round: number; message: string }[] = [];
   if (transcriptParam) { try { transcript = JSON.parse(transcriptParam); } catch {} }
+
+  const betParam = searchParams.get("bet");
+  const betPoints = betParam ? parseInt(betParam) : 100;
+  const betWon = searchParams.get("betWon") === "true";
+  const betPick = searchParams.get("betPick") || "";
 
   const agentIds = ["visionary", "critic", "generalizer", "moderator"];
   const bg = isDark ? "#0D0D14" : "#FAFAFC";
@@ -52,7 +58,7 @@ export default function Summary() {
             {agentIds.map((id, i) => (
               <AgentCard key={id} id={id} isDark={isDark} index={i} />
             ))}
-            <motion.div className="rounded-2xl p-6 flex flex-col items-center gap-4 mt-3"
+            <motion.div className="rounded-2xl p-4 sm:p-5 flex flex-col items-center gap-3 mt-3"
               style={{
                 background: isDark ? "rgba(18,18,30,0.72)" : "rgba(255,255,255,0.75)",
                 border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.5)"}`,
@@ -75,6 +81,37 @@ export default function Summary() {
           <div className="flex flex-col gap-5 shrink-0 custom-scrollbar overflow-y-auto"
             style={{ width: "100%", maxWidth: 380, maxHeight: "calc(100vh - 120px)" }}>
             <DebateAnalytics scores={scores} winner={winner} summary={summary} isDark={isDark} />
+            {betPick && (
+              <motion.div className="rounded-3xl p-5"
+                style={{
+                  background: isDark ? "rgba(18,18,30,0.72)" : "rgba(255,255,255,0.82)",
+                  border: `1px solid ${betWon ? "rgba(87,211,140,0.2)" : "rgba(239,68,68,0.2)"}`,
+                }}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.4 }}>
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-xl flex items-center justify-center"
+                    style={{ background: betWon ? "rgba(87,211,140,0.12)" : "rgba(239,68,68,0.12)" }}>
+                    {betWon ? <TrendingUp size={14} style={{ color: "#57D38C" }} /> : <TrendingDown size={14} style={{ color: "#EF4444" }} />}
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: betWon ? "#57D38C" : "#EF4444" }}>
+                      {betWon ? "You Won!" : "You Lost"}
+                    </p>
+                    <p className="mono text-[9px] uppercase tracking-wider" style={{ color: mutedColor }}>
+                      You bet on {betPick.charAt(0).toUpperCase() + betPick.slice(1)}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Zap size={12} style={{ color: "#F6C453" }} />
+                  <span className="mono text-sm font-bold" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.75)" }}>
+                    {betPoints} points
+                  </span>
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>
