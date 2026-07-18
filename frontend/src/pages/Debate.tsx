@@ -352,40 +352,79 @@ export default function Debate() {
 
         <div className="flex-1 flex flex-col items-center justify-center px-4 sm:px-10 pb-16">
           {phase === "betting" && !betPlaced && (
-            <motion.div className="flex flex-col items-center gap-6"
+            <motion.div className="flex flex-col items-center gap-6 w-full max-w-[500px]"
               initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-              <div className="rounded-2xl p-6 text-center"
-                style={{ background: isDark ? "rgba(18,18,30,0.72)" : "rgba(255,255,255,0.5)", border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)"}` }}>
-                <Swords size={24} className="mx-auto mb-3" style={{ color: "#F6C453" }} />
-                <h2 className="text-lg font-bold mb-2" style={{ color: isDark ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.75)" }}>
-                  Place Your Bet
+              <div className="rounded-3xl p-8 text-center w-full"
+                style={{
+                  background: isDark ? "rgba(18,18,30,0.8)" : "rgba(255,255,255,0.65)",
+                  border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)"}`,
+                  boxShadow: isDark ? "0 8px 40px rgba(0,0,0,0.3)" : "0 8px 40px rgba(0,0,0,0.04)",
+                }}>
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                  style={{ background: "rgba(246,196,83,0.12)" }}>
+                  <Swords size={24} style={{ color: "#F6C453" }} />
+                </div>
+                <h2 className="text-xl font-bold mb-2" style={{ color: isDark ? "#FFFFFF" : "#1E1E2F", fontFamily: "var(--font-heading)" }}>
+                  Pick Your Champion
                 </h2>
-                <p className="text-sm mb-4" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
-                  You have {betPoints} points. Pick who you think will win!
+                <p className="text-sm mb-6" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)" }}>
+                  You have <span className="font-bold" style={{ color: "#F6C453" }}>{betPoints} points</span>. Choose wisely — win = +200, lose = -50.
                 </p>
-                <div className="flex gap-3 justify-center mb-4">
-                  {agentOrder.map((key) => (
-                    <motion.button key={key} onClick={() => setBetPick(key)}
-                      className="px-4 py-2 rounded-xl text-sm font-semibold cursor-pointer transition-all"
-                      style={{
-                        background: betPick === key ? agentMeta[key].color : (isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"),
-                        color: betPick === key ? "#fff" : (isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)"),
-                        border: `1px solid ${betPick === key ? agentMeta[key].color : (isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)")}`,
-                      }}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}>
-                      {agentMeta[key].name}
-                    </motion.button>
-                  ))}
+                <div className="flex flex-col gap-3 mb-6">
+                  {agentOrder.map((key) => {
+                    const Icon = agentMeta[key].icon;
+                    const isSelected = betPick === key;
+                    return (
+                      <motion.button key={key} onClick={() => setBetPick(key)}
+                        className="w-full flex items-center gap-4 px-5 py-4 rounded-2xl cursor-pointer transition-all"
+                        style={{
+                          background: isSelected
+                            ? `${agentMeta[key].color}15`
+                            : isDark ? "rgba(255,255,255,0.03)" : "rgba(0,0,0,0.02)",
+                          border: `2px solid ${
+                            isSelected
+                              ? agentMeta[key].color
+                              : isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.04)"
+                          }`,
+                          boxShadow: isSelected ? `0 0 20px ${agentMeta[key].color}20` : "none",
+                        }}
+                        whileHover={{ scale: 1.02, y: -1 }}
+                        whileTap={{ scale: 0.98 }}>
+                        <div className="w-11 h-11 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: `${agentMeta[key].color}15` }}>
+                          <Icon size={18} style={{ color: agentMeta[key].color }} />
+                        </div>
+                        <div className="flex-1 text-left">
+                          <span className="text-base font-bold tracking-tight" style={{
+                            color: isSelected ? agentMeta[key].color : (isDark ? "rgba(255,255,255,0.8)" : "rgba(30,30,47,0.8)"),
+                          }}>
+                            {agentMeta[key].name}
+                          </span>
+                          <p className="mono text-[10px] uppercase tracking-wider mt-0.5"
+                            style={{ color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)" }}>
+                            {key === "visionary" ? "Grand Futurist" : key === "critic" ? "Devil's Advocate" : "Calm Synthesizer"}
+                          </p>
+                        </div>
+                        {isSelected && (
+                          <motion.div className="w-6 h-6 rounded-full flex items-center justify-center"
+                            style={{ background: agentMeta[key].color }}
+                            initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                            <span className="text-white text-[10px] font-bold">✓</span>
+                          </motion.div>
+                        )}
+                      </motion.button>
+                    );
+                  })}
                 </div>
                 <motion.button onClick={startDebate}
-                  className="px-6 py-2.5 rounded-xl text-sm font-semibold cursor-pointer"
+                  className="w-full py-3.5 rounded-2xl text-sm font-bold cursor-pointer transition-all"
                   style={{
                     background: betPick ? "linear-gradient(135deg, #7C5CFF, #5B8CFF)" : (isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)"),
-                    color: betPick ? "#fff" : (isDark ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)"),
+                    color: betPick ? "#fff" : (isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"),
+                    boxShadow: betPick ? "0 4px 20px rgba(124,92,255,0.3)" : "none",
                   }}
                   disabled={!betPick}
-                  whileHover={betPick ? { scale: 1.04 } : {}}
+                  whileHover={betPick ? { scale: 1.03, y: -1 } : {}}
                   whileTap={betPick ? { scale: 0.97 } : {}}>
                   Start Debate
                 </motion.button>
